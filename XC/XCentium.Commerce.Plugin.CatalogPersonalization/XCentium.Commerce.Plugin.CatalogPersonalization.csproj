@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>The XCentium Commerce Catalog Personalization Plugin.</Description>
+    <TargetFramework>net471</TargetFramework>
+    <PackageTags>$(PackageTags);XCentium;Commerce;Plugin;CatalogPersonalization</PackageTags>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Sitecore.Commerce.Plugin.Catalog" Version="3.0.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+</Project>
