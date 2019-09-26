@@ -70,3 +70,14 @@ Step 3 - Assign personas to seleceted pages:
 
 ![alt text](https://github.com/XCentium/Leveraging-Sitecore-Personalization-Rules-in-Sitecore-Commerce/blob/master/Images/AssignPersona.png)  
 
+Step 4 - Create Personalization Rule for Product List and Product Variants:
+===========================================================================
+
+1-Navigate to 'Default Main Category Page Content'-> Personalization Details and create a rule as shown below:  
+
+![alt text](https://github.com/XCentium/Leveraging-Sitecore-Personalization-Rules-in-Sitecore-Commerce/blob/master/Images/CreatePersonalizationRule.png)
+
+2-Repeat step above for 'Default Main Product Page Content' using 'Product Variants-Chris' as DataSource for personalization rule.
+
+
+
