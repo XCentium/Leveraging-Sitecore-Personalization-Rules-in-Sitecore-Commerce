@@ -35,6 +35,13 @@ In this usage example, we will create a persona based personalization rule that 
 
 Step 1 - Create a new variant with personalization for the targeted product:
 ============================================================================
+1-Create a new Entity Version at the SellableItem level.  
 
-1-Create a new Variant and add a Personalization ID in Variant Peronalization Component:
-![alt text](https://github.com/XCentium/Leveraging-Sitecore-Personalization-Rules-in-Sitecore-Commerce/blob/master/Images/VariationPersonalization.png)
+2-Create a new Variant and copy values from existing Variant or from Parent Sellable Item.  
+
+3-Add a Personalization ID in Variant Peronalization Component: 
+![alt text](https://github.com/XCentium/Leveraging-Sitecore-Personalization-Rules-in-Sitecore-Commerce/blob/master/Images/VariationPersonalization.png)  
+
+4-Create or use existing Price Card to apply a Sale Price for this Variant.  
+
+5-Approve the new Entity Version.
