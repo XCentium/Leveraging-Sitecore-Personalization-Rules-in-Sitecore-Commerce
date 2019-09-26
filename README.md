@@ -27,7 +27,8 @@ XP (Experience Platform) Installation Steps:
 1-Copy the XP 'XCentium.Sitecore.Commerce.XA' project to your XP Solution and add it as a project.  
 2-Add it as a dependency to your XP Web Project.  
 3-Copy the config file under App_Config/Include/zzz/ to your web project.  
-4-Deploy the web project.
+4-Deploy the web project.  
+5-Install XcProductData-1.0.0.zip package. This overrides ProductList and ProductVariants DataSource Template to extend with 'Personalization Id'.
 
 How to Use
 ==============
@@ -39,9 +40,21 @@ Step 1 - Create a new variant with personalization for the targeted product:
 
 2-Create a new Variant and copy values from existing Variant or from Parent Sellable Item.  
 
-3-Add a Personalization ID in Variant Peronalization Component: 
+3-Add a Personalization ID 'Chris_Persona' in Variant Peronalization Component: 
+
 ![alt text](https://github.com/XCentium/Leveraging-Sitecore-Personalization-Rules-in-Sitecore-Commerce/blob/master/Images/VariationPersonalization.png)  
 
 4-Create or use existing Price Card to apply a Sale Price for this Variant.  
 
 5-Approve the new Entity Version.
+
+Step 2 - Create ProductList and ProductVariants DataSources for the personalization:
+===================================================================================
+
+1-Duplicate Product List Data Source and assign Personalization ID 'Chris_Persona' :
+
+![alt text](https://github.com/XCentium/Leveraging-Sitecore-Personalization-Rules-in-Sitecore-Commerce/blob/master/Images/ProductListDuplicate.png) 
+
+2-Duplicate Product List Data Source and assign Personalization ID 'Chris_Persona' :
+
+![alt text](https://github.com/XCentium/Leveraging-Sitecore-Personalization-Rules-in-Sitecore-Commerce/blob/master/Images/ProductVariantsDuplicate.png) 
