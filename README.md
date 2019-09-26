@@ -37,4 +37,4 @@ Step 1 - Create a new variant with personalization for the targeted product:
 ============================================================================
 
 1-Create a new Variant and add a Personalization ID in Variant Peronalization Component:
-
+![alt text](https://github.com/XCentium/Leveraging-Sitecore-Personalization-Rules-in-Sitecore-Commerce/blob/master/Images/VariationPersonalization.png)
