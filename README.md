@@ -58,3 +58,15 @@ Step 2 - Create ProductList and ProductVariants DataSources for the personalizat
 2-Duplicate Product List Data Source and assign Personalization ID 'Chris_Persona' :
 
 ![alt text](https://github.com/XCentium/Leveraging-Sitecore-Personalization-Rules-in-Sitecore-Commerce/blob/master/Images/ProductVariantsDuplicate.png) 
+
+3-Publish the two created items
+
+Step 3 - Assign personas to seleceted pages:
+============================================
+
+1-Create a new Persona or use existing one. In this example we will use existing 'Chris' Persona.  
+
+2-Navigate to a selected page (In this example we use Televisions Category), then go to Experience Editor-> Optimization Tab and assign Values to Personas on this page:  
+
+![alt text](https://github.com/XCentium/Leveraging-Sitecore-Personalization-Rules-in-Sitecore-Commerce/blob/master/Images/AssignPersona.png)  
+
