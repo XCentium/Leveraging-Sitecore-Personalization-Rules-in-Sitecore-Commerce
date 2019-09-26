@@ -79,5 +79,25 @@ Step 4 - Create Personalization Rule for Product List and Product Variants:
 
 2-Repeat step above for 'Default Main Product Page Content' using 'Product Variants-Chris' as DataSource for personalization rule.
 
+3-Publish updated Items.
+
+Verification:
+============
+
+-Navigate to Audio/Headphones. Targeted Product for this personalization displays regular price:  
+
+![alt text](https://github.com/XCentium/Leveraging-Sitecore-Personalization-Rules-in-Sitecore-Commerce/blob/master/Images/Before.png)
+
+-Click on Televisions Category (Associated with 'Chris' Persona)
+
+-Wait 5 to 10 minutes then Navigate back to Audio/Headphones category. Targeted product for this personalization displays Sale Price:
+
+![alt text](https://github.com/XCentium/Leveraging-Sitecore-Personalization-Rules-in-Sitecore-Commerce/blob/master/Images/After.png)
 
 
+Conclusion:
+==========
+
+In this example we used Persona based Personalization Rule, associated with Sale Price. But with this plugin you can use any Personalization rule and associate it with other changes on the variant (Image, Description...)
+
+This plugin was developped and tested on Sitecore XP 9.1.1 and Sitecore XC 9.1.0
