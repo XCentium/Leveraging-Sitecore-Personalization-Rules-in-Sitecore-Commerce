@@ -13,4 +13,18 @@ This plugin was sponsored and created by Xcentium.
 How to Install
 ==============
 
+XC (Experience Commerce) Installation Steps:
+============================================
 
+1-Copy the 'XCentium.Commerce.Plugin.CatalogPersonalization' plugin to your XC Solution and add it as a project.
+2-Add it as a dependency to your Sitecore.Commerce.Engine project.  
+3-Bootstrap Sitecore Commerce Engine.
+4-Refresh Commerce Cache from Sitecore Content Editor.
+
+XP (Experience Platform) Installation Steps:
+============================================
+
+1-Copy the XP 'XCentium.Sitecore.Commerce.XA' project to your XP Solution and add it as a project.
+2-Add it as a dependency to your XP Web Project.
+3-Copy the config file under App_Config/Include/zzz/ to your web project.
+4-Deploy the web project.
