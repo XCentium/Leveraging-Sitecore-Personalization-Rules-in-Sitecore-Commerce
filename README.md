@@ -28,3 +28,13 @@ XP (Experience Platform) Installation Steps:
 2-Add it as a dependency to your XP Web Project.  
 3-Copy the config file under App_Config/Include/zzz/ to your web project.  
 4-Deploy the web project.
+
+How to Use
+==============
+In this usage example, we will create a persona based personalization rule that will unlock a Sale Price for targeted Product.
+
+Step 1 - Create a new variant with personalization for the targeted product:
+============================================================================
+
+1-Create a new Variant and add a Personalization ID in Variant Peronalization Component:
+
