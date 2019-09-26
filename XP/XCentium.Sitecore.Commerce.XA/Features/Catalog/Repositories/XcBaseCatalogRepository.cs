@@ -12,58 +12,58 @@ using Sitecore.Mvc.Presentation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sitecore.Commerce.XA.Feature.Catalog.Repositories;
+using Sitecore.Commerce.XA.Foundation.Common.Search;
+using Sitecore.Caching;
+using Sitecore;
+using Sitecore.Data.Fields;
+using Sitecore.Data;
 
 namespace XCentium.Sitecore.Commerce.XA.Features.Catalog.Repositories
 {
-    public class XcBaseCatalogRepository : BaseCommerceModelRepository, IXcBaseCatalogRepository
+    public class XcBaseCatalogRepository : BaseCatalogRepository, IXcBaseCatalogRepository
     {
-        public XcBaseCatalogRepository(IStorefrontContext storefrontContext, 
-                                       IModelProvider modelProvider, 
-                                       ISiteContext siteContext, 
-                                       ISearchManager searchManager, 
-                                       ICatalogManager catalogManager, 
-                                       ICatalogUrlManager catalogUrlManager)
+        public XcBaseCatalogRepository(IModelProvider modelProvider, IStorefrontContext storefrontContext, ISiteContext siteContext, 
+                                       ISearchInformation searchInformation, ISearchManager searchManager, ICatalogManager catalogManager, 
+                                       ICatalogUrlManager catalogUrlManager, IContext context) : 
+            base(modelProvider, storefrontContext, siteContext, searchInformation, searchManager, catalogManager, catalogUrlManager, context)
         {
-            this.StorefrontContext = storefrontContext;
-            this.ModelProvider = modelProvider;
-            this.SiteContext = siteContext;
-            this.SearchManager = searchManager;
-            this.CatalogManager = catalogManager;
-            this.CatalogUrlManager = catalogUrlManager;
         }
 
-        public IStorefrontContext StorefrontContext { get; protected set; }
-        public IModelProvider ModelProvider { get; protected set; }
-        public ISiteContext SiteContext { get; protected set; }
-        public ICatalogUrlManager CatalogUrlManager { get; protected set; }
-        public ISearchManager SearchManager { get; protected set; }
-        public ICatalogManager CatalogManager { get; protected set; }
+        private static readonly Cache _personalizationCache = new Cache("PersonalizationCache", StringUtil.ParseSizeString("2KB"));
 
         public string PersonalizationId
         {
             get
             {
-                return RenderingContext.Current.Rendering.Item?.Fields["PersonalizationId"]?.GetValue(true) ?? string.Empty;
+                return RenderingContext.Current.Rendering.Item?.Fields["PersonalizationId"]?.GetValue(true) ??
+                    (_personalizationCache.ContainsKey("PersonalizationId") ? _personalizationCache.GetValue("PersonalizationId").ToString() : string.Empty);
             }
         }
 
         public virtual CatalogItemRenderingModel XcGetCatalogItemRenderingModel(IVisitorContext visitorContext, Item productItem)
         {
+            _personalizationCache.Remove("PersonalizationId");
+            if (!string.IsNullOrEmpty(this.PersonalizationId))
+            {
+                _personalizationCache.Add("PersonalizationId", PersonalizationId);
+            }
+
             Assert.ArgumentNotNull(visitorContext, nameof(visitorContext));
             CommerceStorefront currentStorefront = this.StorefrontContext.CurrentStorefront;
             List<VariantEntity> variantEntityList = new List<VariantEntity>();
             if (productItem != null && productItem.HasChildren)
             {
-                foreach (Item child in productItem.Children)
+                var childList = productItem.Children.Where(child => this.PersonalizationId.Equals(child["PersonalizationId"], System.StringComparison.OrdinalIgnoreCase));
+                if (!childList.Any())
                 {
-                    if (string.IsNullOrEmpty(this.PersonalizationId) && string.IsNullOrEmpty(child["PersonalizationId"]) ||
-                        !string.IsNullOrEmpty(child["PersonalizationId"]) &&
-                        this.PersonalizationId.Equals(child["PersonalizationId"], System.StringComparison.OrdinalIgnoreCase))
-                    {
-                        VariantEntity model = this.ModelProvider.GetModel<VariantEntity>();
-                        model.Initialize(child);
-                        variantEntityList.Add(model);
-                    }
+                    childList = productItem.Children.Where(child => string.IsNullOrEmpty(child["PersonalizationId"]));
+                }
+                foreach (Item variantItem in childList)
+                {
+                    VariantEntity model = this.ModelProvider.GetModel<VariantEntity>();
+                    model.Initialize(variantItem);
+                    variantEntityList.Add(model);
                 }
             }
             ProductEntity model1 = this.ModelProvider.GetModel<ProductEntity>();
@@ -88,18 +88,29 @@ namespace XCentium.Sitecore.Commerce.XA.Features.Catalog.Repositories
             }
             model2.Initialize(model1, false);
             this.SiteContext.Items["CurrentCatalogItemRenderingModel"] = model2;
+            if (model2.CatalogItem.HasChildren)
+            {
+                var childList = model2.CatalogItem.Children.Where(child => this.PersonalizationId.Equals(child["PersonalizationId"], System.StringComparison.OrdinalIgnoreCase));
+                if (!childList.Any())
+                {
+                    childList = model2.CatalogItem.Children.Where(child => string.IsNullOrEmpty(child["PersonalizationId"]));
+                }
+                foreach (Item child in childList)
+                {
+                    MultilistField field = child.Fields["Images"];
+                    if (field != null)
+                    {
+                        model2.Images.Clear();
+                        foreach (ID targetId in field.TargetIDs)
+                        {
+                            model2.Images.Add(child.Database.GetItem(targetId));
+                        }
+                        return model2;
+                    }
+                }
+            }
+            
             return model2;
-        }
-
-        protected virtual ICollection<KeyValuePair<string, decimal?>> GetGiftCardAmountOptions(IVisitorContext visitorContext, CommerceStorefront storefront, ProductEntity productEntity)
-        {
-            Dictionary<string, decimal?> source = new Dictionary<string, decimal?>();
-            if (productEntity == null || productEntity.Variants == null)
-                return null;
-            this.CatalogManager.GetProductPrice(storefront, visitorContext, productEntity, null);
-            foreach (VariantEntity variant in productEntity.Variants)
-                source.Add(variant.VariantId, new decimal?(Math.Round(variant.AdjustedPrice ?? decimal.Zero, 2)));
-            return source.ToList();
         }
     }
 }

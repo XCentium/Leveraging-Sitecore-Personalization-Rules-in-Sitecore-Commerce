@@ -17,6 +17,7 @@ using Sitecore.Commerce.Services.Inventory;
 using Sitecore.Commerce.Entities.Inventory;
 using Sitecore.Commerce.XA.Feature.Catalog.Models;
 using Sitecore.Commerce.XA.Foundation.Connect;
+using System.Linq;
 
 namespace XCentium.Sitecore.Commerce.XA.Features.Catalog.Repositories
 {
@@ -59,19 +60,19 @@ namespace XCentium.Sitecore.Commerce.XA.Features.Catalog.Repositories
                 List<CommerceInventoryProduct> inventoryProductList1 = new List<CommerceInventoryProduct>();
                 if (!includeBundledItemsInventory && product.HasChildren)
                 {
-                    foreach (Item child in product.Children)
+                    var childList = product.Children.Where(child => this.PersonalizationId.Equals(child["PersonalizationId"], System.StringComparison.OrdinalIgnoreCase));
+                    if (!childList.Any())
                     {
-                        if (string.IsNullOrEmpty(this.PersonalizationId) && string.IsNullOrEmpty(child["PersonalizationId"]) ||
-                        !string.IsNullOrEmpty(child["PersonalizationId"]) &&
-                        this.PersonalizationId.Equals(child["PersonalizationId"], System.StringComparison.OrdinalIgnoreCase))
-                        {
-                            List<CommerceInventoryProduct> inventoryProductList2 = inventoryProductList1;
-                            CommerceInventoryProduct inventoryProduct = new CommerceInventoryProduct();
-                            inventoryProduct.ProductId = productId;
-                            inventoryProduct.CatalogName = catalog;
-                            inventoryProduct.VariantId = child.Name;
-                            inventoryProductList2.Add(inventoryProduct);
-                        }
+                        childList = product.Children.Where(child => string.IsNullOrEmpty(child["PersonalizationId"]));
+                    }
+                    foreach (Item child in childList)
+                    {
+                        List<CommerceInventoryProduct> inventoryProductList2 = inventoryProductList1;
+                        CommerceInventoryProduct inventoryProduct = new CommerceInventoryProduct();
+                        inventoryProduct.ProductId = productId;
+                        inventoryProduct.CatalogName = catalog;
+                        inventoryProduct.VariantId = child.Name;
+                        inventoryProductList2.Add(inventoryProduct);
                     }
                 }
                 else
