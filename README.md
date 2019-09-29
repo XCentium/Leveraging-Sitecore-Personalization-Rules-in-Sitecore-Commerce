@@ -5,6 +5,10 @@ For more information on Sitecore Personalization : https://doc.sitecore.com/user
 
 This plugin will allow to extend this feature to Sitecore Commerce Products by extending the commerce variant component with a 'Personalization Id' and filtering Variants in SXA Pipelines based on 'Personalizaton Id' when/if provided in Data Source.
 
+This plugin will allow you for example to unlock Sale Prices/Discounts based on a Sitecore Campaign or Campaign Group.
+Or you can use differnet Pricing or Images based on a Sitecore determined Persona, Profile Cards, Pattern Cards or any other visitor behavior.
+In other terms you'll be able apply any Sitecore Peronalization Rule on Commerce Products.
+
 Sponsor
 =======
 This plugin was sponsored and created by Xcentium.
@@ -13,7 +17,7 @@ This plugin was sponsored and created by Xcentium.
 How to Install
 ==============
 
-XC (Experience Commerce) Installation Steps:
+Commerce Engine Installation Steps:
 ============================================
 
 1-Copy the 'XCentium.Commerce.Plugin.CatalogPersonalization' plugin to your XC Solution and add it as a project.  
@@ -21,7 +25,7 @@ XC (Experience Commerce) Installation Steps:
 3-Bootstrap Sitecore Commerce Engine.  
 4-Refresh Commerce Cache from Sitecore Content Editor.
 
-XP (Experience Platform) Installation Steps:
+SXA Storefront Installation Steps:
 ============================================
 
 1-Copy the XP 'XCentium.Sitecore.Commerce.XA' project to your XP Solution and add it as a project.  
@@ -32,7 +36,7 @@ XP (Experience Platform) Installation Steps:
 
 How to Use
 ==============
-In this usage example, we will create a persona based personalization rule that will unlock a Sale Price for targeted Product.
+In this usage example, we will create a persona based personalization rule that will unlock a Sale Price for a targeted Product.
 
 Step 1 - Create a new variant with personalization for the targeted product:
 ============================================================================
