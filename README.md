@@ -30,9 +30,9 @@ SXA Storefront Installation Steps:
 
 1-Copy the XP 'XCentium.Sitecore.Commerce.XA' project to your XP Solution and add it as a project.  
 2-Add it as a dependency to your XP Web Project.  
-3-Copy the config file under App_Config/Include/zzz/ to your web project.  
+3-Copy the config files under App_Config/Include/zzz/ to your web project.  
 4-Deploy the web project.  
-5-Install XcProductData-1.0.0.zip package. This overrides ProductList and ProductVariants DataSource Template to extend with 'Personalization Id'.
+5-Install packages under /Packages folder using Sitecore Package installer.
 
 How to Use
 ==============
