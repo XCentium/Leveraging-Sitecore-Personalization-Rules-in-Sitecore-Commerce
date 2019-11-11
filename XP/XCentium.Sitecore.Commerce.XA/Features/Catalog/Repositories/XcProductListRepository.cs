@@ -19,6 +19,8 @@ using Sitecore;
 using Sitecore.Data.Fields;
 using Sitecore.Data;
 using Sitecore.Collections;
+using System;
+using System.Globalization;
 
 namespace XCentium.Sitecore.Commerce.XA.Features.Catalog.Repositories
 {
@@ -71,7 +73,38 @@ namespace XCentium.Sitecore.Commerce.XA.Features.Catalog.Repositories
             {
                 if(subModel.CatalogItem.HasChildren)
                 {
-                    var childList = subModel.CatalogItem.Children.Where(child => personalizationId.Equals(child["PersonalizationId"], System.StringComparison.OrdinalIgnoreCase));
+                    var childList = subModel.CatalogItem.Children.Where(child =>
+                    {
+                        var variantPersonalizationId = child["PersonalizationId"];
+                        var liveDate = child["LiveDate"];
+                        var expiryDate = child["ExpiryDate"];
+
+                        if (personalizationId.Equals(child["PersonalizationId"], System.StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (!string.IsNullOrEmpty(liveDate))
+                            {
+                                var parseSuccess = DateTimeOffset.TryParseExact(liveDate, "yyyyMMddTHHmmss", null, DateTimeStyles.None, out var variantLiveDate);
+                                if (parseSuccess && variantLiveDate > DateTimeOffset.Now)
+                                {
+                                    return false;
+                                }
+                            }
+
+                            if (!string.IsNullOrEmpty(expiryDate))
+                            {
+                                var parseSuccess = DateTimeOffset.TryParseExact(expiryDate, "yyyyMMddTHHmmss", null, DateTimeStyles.None, out var variantExpiryDate);
+                                if (parseSuccess && variantExpiryDate <= DateTimeOffset.Now)
+                                {
+                                    return false;
+                                }
+                            }
+
+                            return true;
+                        }
+
+                        return false;
+                    });
+
                     if (!childList.Any())
                     {
                         childList = subModel.CatalogItem.Children.Where(child => string.IsNullOrEmpty(child["PersonalizationId"]));

@@ -37,6 +37,8 @@
             var component = entity.GetComponent<PersonalizationComponent>(entityView.ItemId, false);
             component.PersonalizationId = entityView.Properties.FirstOrDefault(p => p.Name.Equals("PersonalizationId", StringComparison.OrdinalIgnoreCase))?.Value;
             component.PersonalizationDescription = entityView.Properties.FirstOrDefault(p => p.Name.Equals("PersonalizationDescription", StringComparison.OrdinalIgnoreCase))?.Value;
+            component.LiveDate = DateTime.Parse(entityView.Properties.FirstOrDefault(p => p.Name.Equals("LiveDate", StringComparison.OrdinalIgnoreCase))?.Value);
+            component.ExpiryDate = DateTime.Parse(entityView.Properties.FirstOrDefault(p => p.Name.Equals("ExpiryDate", StringComparison.OrdinalIgnoreCase))?.Value);
 
             this._persistEntityPipeline.Run(new PersistEntityArgument(entity), context);
 

@@ -7,5 +7,6 @@ namespace XCentium.Sitecore.Commerce.XA.Features.Catalog.Repositories
     public interface IXcBaseCatalogRepository
     {
         CatalogItemRenderingModel XcGetCatalogItemRenderingModel(IVisitorContext visitorContext, Item productItem);
+        string GetPersonalizationId();
     }
 }

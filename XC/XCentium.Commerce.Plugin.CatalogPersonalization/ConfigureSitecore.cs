@@ -8,6 +8,7 @@
     using System.Reflection;
     using XCentium.Commerce.Plugin.CatalogPersonalization.Pipelines.Blocks;
     using Sitecore.Framework.Pipelines.Definitions.Extensions;
+    using Sitecore.Commerce.Plugin.Carts;
 
     public class ConfigureSitecore : IConfigureSitecore
     {
@@ -32,6 +33,10 @@
                 .ConfigurePipeline<ICreateSellableItemVariationPipeline>(c =>
                 {
                     c.Add<CreateSellableItemVariantPersonalizationBlock>().After<CreateSellableItemVariationBlock>();
+                })
+                .ConfigurePipeline<IAddCartLinePipeline>(c=>
+                {
+                    c.Add<AddCartLinePersonalizationBlock>().After<ValidateSellableItemBlock>();
                 })
                 );
 

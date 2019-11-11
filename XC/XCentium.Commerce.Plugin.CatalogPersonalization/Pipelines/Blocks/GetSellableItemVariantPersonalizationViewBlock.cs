@@ -40,7 +40,7 @@
             }
 
             var sellableItem = request.Entity as SellableItem;
-            if(sellableItem == null)
+            if (sellableItem == null)
             {
                 return Task.FromResult(entityView);
             }
@@ -101,6 +101,28 @@
                     IsReadOnly = isReadOnly,
                     IsRequired = false,
                     DisplayName = "Description"
+                });
+
+            entityView.Properties.Add(
+                new ViewProperty
+                {
+                    Name = nameof(PersonalizationComponent.LiveDate),
+                    RawValue = component.LiveDate,
+                    IsReadOnly = isReadOnly,
+                    IsRequired = false,
+                    DisplayName = "Live Date",
+                    OriginalType = typeof(DateTimeOffset).ToString()
+                });
+
+            entityView.Properties.Add(
+                new ViewProperty
+                {
+                    Name = nameof(PersonalizationComponent.ExpiryDate),
+                    RawValue = component.ExpiryDate,
+                    IsReadOnly = isReadOnly,
+                    IsRequired = false,
+                    DisplayName = "Expiry Date",
+                    OriginalType = typeof(DateTimeOffset).ToString()
                 });
         }
     }

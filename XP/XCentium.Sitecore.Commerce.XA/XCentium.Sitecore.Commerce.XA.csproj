@@ -226,8 +226,9 @@
     <Reference Include="Sitecore.Commerce.Engine.Connect, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sitecore.Commerce.Engine.Connect.3.0.45\lib\net471\Sitecore.Commerce.Engine.Connect.dll</HintPath>
     </Reference>
-    <Reference Include="Sitecore.Commerce.ServiceProxy, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sitecore.Commerce.ServiceProxy.3.0.40\lib\net471\Sitecore.Commerce.ServiceProxy.dll</HintPath>
+    <Reference Include="Sitecore.Commerce.ExperienceAnalytics, Version=12.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Sitecore.Commerce.ExperienceAnalytics.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Commerce.XA.Feature.Catalog, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sitecore.Commerce.XA.Feature.Catalog.2.0.181\lib\net471\Sitecore.Commerce.XA.Feature.Catalog.dll</HintPath>
@@ -255,6 +256,10 @@
     </Reference>
     <Reference Include="Sitecore.ContentSearch.Linq, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sitecore.ContentSearch.Linq.9.1.1\lib\net471\Sitecore.ContentSearch.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.ExperienceAnalytics.Aggregation, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Sitecore.ExperienceAnalytics.Aggregation.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Framework.Conditions, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sitecore.Framework.Conditions.3.1.0\lib\netstandard2.0\Sitecore.Framework.Conditions.dll</HintPath>
@@ -498,8 +503,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnalyticsData\OrderGoalAnalyticsData.cs" />
+    <Compile Include="AnalyticsData\VisitedProductDetailsPageAnalyticsData.cs" />
     <Compile Include="App_Start\RazorGeneratorMvcStart.cs" />
+    <Compile Include="CustomModels\PageEvents\Converters\XcConvertPageEventDataToVisitedCategoryPageEvent.cs" />
+    <Compile Include="CustomModels\PageEvents\Converters\XcConvertPageEventDataToVisitedProductDetailsPageEvent.cs" />
+    <Compile Include="CustomModels\PageEvents\Converters\XcConvertPageEventDataToVisitorOrderCreatedGoal.cs" />
+    <Compile Include="Engine\Connect\Pipelines\Carts\XcTranslateCartLineToEntity.cs" />
+    <Compile Include="ExperienceAnalytics\Dimensions\ByPersonalizationsPurchased.cs" />
+    <Compile Include="ExperienceAnalytics\Dimensions\ByPersonalizationsVisited.cs" />
+    <Compile Include="ExperienceAnalytics\Transformers\PersonalizationTransformer.cs" />
     <Compile Include="Features\Catalog\Repositories\IXcBaseCatalogRepository.cs" />
+    <Compile Include="Features\Catalog\Repositories\XcVisitedCategoryPageRepository.cs" />
     <Compile Include="Features\Catalog\Repositories\XcVisitedProductDetailsPageRepository.cs" />
     <Compile Include="Features\Catalog\Repositories\XcBaseCatalogRepository.cs" />
     <Compile Include="Features\Catalog\Repositories\XcProductInformationRepository.cs" />
@@ -510,11 +525,22 @@
     <Compile Include="Features\Catalog\Repositories\XcProductPriceRepository.cs" />
     <Compile Include="Features\Catalog\Repositories\XcPromotedProductsRepository.cs" />
     <Compile Include="Foundation\Managers\XcCatalogManager.cs" />
+    <Compile Include="Pipelines\Orders\Common\TriggerOrderGoal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\Sitecore.Commerce.ExperienceAnalytics.dll" />
+    <Content Include="lib\Sitecore.ExperienceAnalytics.Aggregation.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sitecore.Commerce.ServiceProxy\Sitecore.Commerce.ServiceProxy.csproj">
+      <Project>{99756fd9-3ca6-4953-9720-52ed067fb24e}</Project>
+      <Name>Sitecore.Commerce.ServiceProxy</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

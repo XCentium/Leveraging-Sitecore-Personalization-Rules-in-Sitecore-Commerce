@@ -18,6 +18,7 @@ using Sitecore.Caching;
 using Sitecore;
 using Sitecore.Data.Fields;
 using Sitecore.Data;
+using System.Globalization;
 
 namespace XCentium.Sitecore.Commerce.XA.Features.Catalog.Repositories
 {
@@ -30,31 +31,52 @@ namespace XCentium.Sitecore.Commerce.XA.Features.Catalog.Repositories
         {
         }
 
-        private static readonly Cache _personalizationCache = new Cache("PersonalizationCache", StringUtil.ParseSizeString("2KB"));
-
         public string PersonalizationId
         {
             get
             {
-                return RenderingContext.Current.Rendering.Item?.Fields["PersonalizationId"]?.GetValue(true) ??
-                    (_personalizationCache.ContainsKey("PersonalizationId") ? _personalizationCache.GetValue("PersonalizationId").ToString() : string.Empty);
+                return RenderingContext.Current.Rendering.Item?.Fields["PersonalizationId"]?.GetValue(true) ?? string.Empty;
             }
         }
 
         public virtual CatalogItemRenderingModel XcGetCatalogItemRenderingModel(IVisitorContext visitorContext, Item productItem)
         {
-            _personalizationCache.Remove("PersonalizationId");
-            if (!string.IsNullOrEmpty(this.PersonalizationId))
-            {
-                _personalizationCache.Add("PersonalizationId", PersonalizationId);
-            }
-
             Assert.ArgumentNotNull(visitorContext, nameof(visitorContext));
             CommerceStorefront currentStorefront = this.StorefrontContext.CurrentStorefront;
             List<VariantEntity> variantEntityList = new List<VariantEntity>();
             if (productItem != null && productItem.HasChildren)
             {
-                var childList = productItem.Children.Where(child => this.PersonalizationId.Equals(child["PersonalizationId"], System.StringComparison.OrdinalIgnoreCase));
+                var childList = productItem.Children.Where(child =>
+                {
+                    var variantPersonalizationId = child["PersonalizationId"];
+                    var liveDate = child["LiveDate"];
+                    var expiryDate = child["ExpiryDate"];
+
+                    if(this.PersonalizationId.Equals(child["PersonalizationId"], System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        if(!string.IsNullOrEmpty(liveDate))
+                        {
+                            var parseSuccess = DateTimeOffset.TryParseExact(liveDate, "yyyyMMddTHHmmss", null, DateTimeStyles.None, out var variantLiveDate);
+                            if (parseSuccess && variantLiveDate > DateTimeOffset.Now)
+                            {
+                                return false;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(expiryDate))
+                        {
+                            var parseSuccess = DateTimeOffset.TryParseExact(expiryDate, "yyyyMMddTHHmmss", null, DateTimeStyles.None, out var variantExpiryDate);
+                            if (parseSuccess && variantExpiryDate <= DateTimeOffset.Now)
+                            {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
+
+                    return false;
+                });
                 if (!childList.Any())
                 {
                     childList = productItem.Children.Where(child => string.IsNullOrEmpty(child["PersonalizationId"]));
@@ -87,7 +109,7 @@ namespace XCentium.Sitecore.Commerce.XA.Features.Catalog.Repositories
                 model2.CustomerAverageRating = this.CatalogManager.GetProductRating(productItem, null);
             }
             model2.Initialize(model1, false);
-            this.SiteContext.Items["CurrentCatalogItemRenderingModel"] = model2;
+            //this.SiteContext.Items["CurrentCatalogItemRenderingModel"] = model2;
             if (model2.CatalogItem.HasChildren)
             {
                 var childList = model2.CatalogItem.Children.Where(child => this.PersonalizationId.Equals(child["PersonalizationId"], System.StringComparison.OrdinalIgnoreCase));
@@ -111,6 +133,11 @@ namespace XCentium.Sitecore.Commerce.XA.Features.Catalog.Repositories
             }
             
             return model2;
+        }
+
+        public string GetPersonalizationId()
+        {
+            return this.PersonalizationId;
         }
     }
 }
